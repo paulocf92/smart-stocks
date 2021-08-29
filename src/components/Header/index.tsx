@@ -1,8 +1,8 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 import styles from './styles.module.scss';
 import { ActiveLink } from '../ActiveLink';
-import Link from 'next/link';
 
 export function Header() {
   return (

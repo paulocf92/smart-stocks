@@ -3,11 +3,9 @@ import { Header } from '../components/Header';
 
 import '../styles/global.scss';
 
-import styles from './_app.module.scss';
-
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <div className={styles.mainContainer}>
+    <div style={{ display: 'flex' }}>
       <Header />
       <Component {...pageProps} />
     </div>
