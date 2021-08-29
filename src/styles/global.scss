@@ -7,11 +7,12 @@
 :root {
   --white: #ffffff;
 
-  --gray-001: #f6f9f8;
+  --gray-001: #f5f8fa;
   --gray-002: #657786;
   --gray-003: #14171a;
 
   --primary: #0047bb;
+  --primary-translucent: rgba(0, 71, 187, 0.46);
 
   --secondary: #f06400;
 
@@ -57,4 +58,15 @@ a {
 [disabled] {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.recharts-tooltip-wrapper {
+  .stocksGrowthTooltip {
+    background-color: var(--primary);
+    color: var(--white);
+    font-size: 14px;
+    padding: 4px 16px;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(58, 104, 22, 0.15);
+  }
 }

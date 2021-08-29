@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 
 import { SearchInput } from '../components/SearchInput';
+import { StocksGrowth } from '../components/StocksGrowth';
 
 import styles from './home.module.scss';
 
@@ -26,6 +27,8 @@ export default function Home() {
           </div>
 
           <SearchInput />
+
+          <StocksGrowth />
         </div>
       </main>
     </>

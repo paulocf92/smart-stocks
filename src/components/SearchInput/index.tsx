@@ -1,5 +1,5 @@
+import Image from 'next/image';
 import { FormEvent, useState } from 'react';
-import { MdSearch } from 'react-icons/md';
 
 import styles from './styles.module.scss';
 
@@ -24,7 +24,7 @@ export function SearchInput() {
         required
       />
       <button type='submit' className={styles.searchInputIcon}>
-        <MdSearch size={26} color='#ffffff' />
+        <Image src='/images/search.svg' width={26} height={26} alt='' />
       </button>
     </form>
   );
