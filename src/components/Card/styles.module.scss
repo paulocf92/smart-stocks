@@ -11,7 +11,7 @@
 
   margin: 4px 4px 10px;
 
-  transition: all 0.2s;
+  transition: box-shadow 0.2s, transform 0.2s;
 
   &:hover {
     box-shadow: 6px 6px 10px rgba(43, 37, 63, 0.1);

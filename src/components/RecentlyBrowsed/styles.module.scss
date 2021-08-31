@@ -15,8 +15,14 @@
 
     padding: 0 4px;
 
+    transition: opacity 0.2s;
+
     & + button {
       margin-left: 10px;
+    }
+
+    &:hover {
+      opacity: 0.5;
     }
   }
 }
