@@ -56,18 +56,11 @@ a {
   text-decoration: none;
 }
 
+strong {
+  cursor: default;
+}
+
 [disabled] {
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-.recharts-tooltip-wrapper {
-  .stocksGrowthTooltip {
-    background-color: var(--primary);
-    color: var(--white);
-    font-size: 14px;
-    padding: 4px 16px;
-    border-radius: 4px;
-    box-shadow: 0 4px 8px rgba(58, 104, 22, 0.15);
-  }
 }
