@@ -45,12 +45,15 @@ export function FavoriteCompanies({ items = data }: FavoriteCompaniesProps) {
           alt='João da Silva Almeida Magalhães'
         />
         <strong>João da Silva Almeida Magalhães</strong>
-        <Image
-          src='/images/chevron-down.svg'
-          width={16}
-          height={16}
-          alt='Dados'
-        />
+        <button type='button'>
+          <Image
+            src='/images/chevron-down.svg'
+            width={16}
+            height={16}
+            alt='Dados'
+            title='Editar dados'
+          />
+        </button>
       </div>
       <div className={styles.favoriteTitle}>
         <Image src='/images/star-filled.svg' width={24} height={24} alt='' />

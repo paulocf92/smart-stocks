@@ -30,6 +30,11 @@
     background-color: var(--primary);
     border-radius: 50%;
   }
+
+  button {
+    border: 0;
+    background: none;
+  }
 }
 
 .favoriteTitle {
