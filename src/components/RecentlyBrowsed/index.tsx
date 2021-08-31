@@ -4,7 +4,8 @@ import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 
 import styles from './styles.module.scss';
 
-import { TickerScrollItem, Company } from './TickerScrollItem';
+// import { TickerScrollItem, Company } from './TickerScrollItem';
+import { Card, Company } from '../Card';
 
 const data: Company[] = [
   {
@@ -79,7 +80,6 @@ export function RecentlyBrowsed({ elementsToScroll }: RecentlyBrowsedProps) {
       ? Math.max(0, elementsToScroll - 1)
       : Math.max(0, withinViewport - 1);
 
-    console.log({ withinViewport, scrollBy });
     setScrollByExtraElements(scrollBy);
   }, [elementsToScroll]);
 
@@ -118,8 +118,14 @@ export function RecentlyBrowsed({ elementsToScroll }: RecentlyBrowsedProps) {
       <div className={styles.tickerScrollContainer}>
         <div className={styles.tickerScrollContent} ref={containerRef}>
           <div className={styles.tickerScrollFlex}>
-            {data.map((company: Company) => (
-              <TickerScrollItem key={company.id} company={company} />
+            {data.map((company: Company, i: number) => (
+              <Card
+                key={company.id}
+                company={company}
+                star
+                extraStyles={i > 0 ? { marginLeft: 20 } : {}}
+                onClick={() => {}}
+              />
             ))}
           </div>
         </div>

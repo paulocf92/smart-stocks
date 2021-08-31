@@ -4,6 +4,7 @@ import { RecentlyBrowsed } from '../components/RecentlyBrowsed';
 
 import { SearchInput } from '../components/SearchInput';
 import { StocksGrowth } from '../components/StocksGrowth';
+import { FavoriteCompanies } from '../components/FavoriteCompanies';
 
 import styles from './home.module.scss';
 
@@ -34,6 +35,8 @@ export default function Home() {
           <RecentlyBrowsed />
         </div>
       </main>
+
+      <FavoriteCompanies />
     </>
   );
 }

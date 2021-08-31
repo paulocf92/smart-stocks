@@ -23,7 +23,12 @@
 
 .recentlyBrowsedTitle {
   display: flex;
+  align-items: center;
   margin-bottom: 1rem;
+
+  strong {
+    margin-left: 5px;
+  }
 }
 
 .tickerScrollContainer {

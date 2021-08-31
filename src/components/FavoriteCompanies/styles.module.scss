@@ -1,0 +1,55 @@
+.favoriteContainer {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  margin: 20px;
+}
+
+.userInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border: 1px solid var(--primary-translucent-002);
+  border-radius: 30px;
+  padding: 4px 8px 4px 4px;
+
+  margin-bottom: 2rem;
+
+  strong {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--primary);
+
+    margin: 0 10px;
+  }
+
+  img.userAvatar {
+    background-color: var(--primary);
+    border-radius: 50%;
+  }
+}
+
+.favoriteTitle {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  strong {
+    margin-left: 5px;
+  }
+}
+
+.companyItem {
+  display: flex;
+  align-items: center;
+
+  button {
+    border: 0;
+    background: none;
+
+    margin-right: 15px;
+  }
+}
