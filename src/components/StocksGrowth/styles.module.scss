@@ -1,9 +1,10 @@
 .stocksGrowthContainer {
   width: 100%;
-  max-height: 50vh;
+  max-height: 400px;
   background-color: var(--white);
   box-shadow: 0 4px 12px rgba(222, 222, 231, 0.4);
   border-radius: 8px;
+  padding: 1rem 0;
 }
 
 .stocksGrowthHeader {
@@ -12,8 +13,8 @@
   display: flex;
   justify-content: space-between;
 
-  padding: 1rem 2rem 0;
-  margin-bottom: 20px;
+  padding: 0 2rem;
+  margin-bottom: 10px;
 }
 
 .stocksGrowthFavoriteTooltip {

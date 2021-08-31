@@ -1,0 +1,58 @@
+.recentlyBrowsedContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.recentlyBrowsedHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.recentlyBrowsedButtons {
+  button {
+    border: 0;
+    background: none;
+
+    padding: 0 4px;
+
+    & + button {
+      margin-left: 10px;
+    }
+  }
+}
+
+.recentlyBrowsedTitle {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.tickerScrollContainer {
+  display: flex;
+
+  > button {
+    border: 0;
+  }
+}
+
+.tickerScrollContent {
+  display: flex;
+  overflow: auto;
+
+  scroll-behavior: smooth;
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none; /* IE and Edge  */
+  scrollbar-width: none; /* Firefox */
+}
+
+.tickerScrollFlex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+}

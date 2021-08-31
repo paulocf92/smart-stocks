@@ -127,13 +127,13 @@ export function StocksGrowth() {
           <span>$-0.09 (-0.03%)</span>
         </div>
       </div>
-      <ResponsiveContainer>
+      <ResponsiveContainer height='80%'>
         <AreaChart
           data={data}
           style={{
             cursor: 'pointer',
           }}
-          margin={{ top: 0, right: 30, left: 10, bottom: 80 }}
+          margin={{ top: 0, right: 30, left: 10, bottom: 0 }}
         >
           <defs>
             <linearGradient id='colorPrice' x1='0' y1='0' x2='0' y2='1'>

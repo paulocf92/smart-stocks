@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Image from 'next/image';
+import { RecentlyBrowsed } from '../components/RecentlyBrowsed';
 
 import { SearchInput } from '../components/SearchInput';
 import { StocksGrowth } from '../components/StocksGrowth';
@@ -29,6 +30,8 @@ export default function Home() {
           <SearchInput />
 
           <StocksGrowth />
+
+          <RecentlyBrowsed />
         </div>
       </main>
     </>
