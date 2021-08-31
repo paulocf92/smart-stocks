@@ -4,7 +4,6 @@ import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 
 import styles from './styles.module.scss';
 
-// import { TickerScrollItem, Company } from './TickerScrollItem';
 import { Card, Company } from '../Card';
 
 const data: Company[] = [
