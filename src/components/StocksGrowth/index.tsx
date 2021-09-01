@@ -1,5 +1,6 @@
 import Image from 'next/image';
-import { HTMLAttributes } from 'react';
+import { useEffect } from 'react';
+import { useState } from 'react';
 import {
   AreaChart,
   Area,
@@ -9,8 +10,9 @@ import {
   YAxis,
   ResponsiveContainer,
 } from 'recharts';
+import { api } from '../../services/api';
 
-const data = [
+const data2 = [
   {
     hour: '10:00',
     price: 0,
@@ -88,21 +90,95 @@ interface CustomTooltipProps {
   payload?: {
     value: string;
   }[];
-  label?: string;
 }
 const CustomTooltip = ({
   active,
   payload = [{ value: '' }],
-  label,
 }: CustomTooltipProps) => {
-  if (active) {
+  if (active && !!payload.length) {
     return <div className='stocksGrowthTooltip'>{`$${payload[0].value}`}</div>;
   }
 
   return null;
 };
 
+type CompanyData = {
+  companyName: string;
+  symbol: string;
+  latestPrice: number;
+  latestPriceFormatted: string;
+  change: number;
+  changeFormatted: string;
+  changePercent: number;
+  changePercentFormatted: string;
+};
+
+type HistoricalDataSlice = {
+  minute: string;
+  close: number;
+};
+
 export function StocksGrowth() {
+  const [companyData, setCompanyData] = useState<CompanyData>(
+    {} as CompanyData
+  );
+  const [historicalData, setHistoricalData] = useState<HistoricalDataSlice[]>();
+
+  async function loadCompanyData() {
+    try {
+      const response = await api.get('/gsat/quote', {
+        params: {
+          token: process.env.NEXT_PUBLIC_IEXCLOUD_TOKEN,
+        },
+      });
+
+      const data: CompanyData = response.data;
+
+      setCompanyData({
+        ...data,
+        latestPriceFormatted: new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }).format(data.latestPrice),
+        changeFormatted: new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }).format(data.change),
+        changePercentFormatted: data.changePercent.toFixed(3) + '%',
+      });
+
+      console.log(data);
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  async function loadHistoricalData() {
+    try {
+      const response = await api.get('/gsat/chart/today', {
+        params: {
+          chartInterval: 30,
+          token: process.env.NEXT_PUBLIC_IEXCLOUD_TOKEN,
+        },
+      });
+
+      const data: HistoricalDataSlice[] = response.data;
+
+      const filtered = data.filter(slice => slice.close !== null);
+
+      setHistoricalData(filtered);
+
+      console.log(filtered);
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  useEffect(() => {
+    loadCompanyData();
+    loadHistoricalData();
+  }, []);
+
   return (
     <div className={styles.stocksGrowthContainer}>
       <div className={styles.stocksGrowthHeader}>
@@ -115,25 +191,40 @@ export function StocksGrowth() {
             <span>Adicionar aos favoritos</span>
           </div>
           <div>
-            <strong>MSFT</strong>
-            <p>Microsoft</p>
+            <strong>{companyData.symbol}</strong>
+            <p>{companyData.companyName}</p>
           </div>
         </div>
-        <div className={styles.stocksGrowthValuation}>
+        <div
+          className={styles.stocksGrowthValuation}
+          style={{
+            color: companyData.change > 0 ? 'var(--success)' : 'var(--danger)',
+          }}
+        >
           <div>
-            <Image src='/images/price-fall.svg' width={16} height={16} alt='' />
-            <strong>$265,42</strong>
+            <Image
+              src={`/images/price-${
+                companyData.change > 0 ? 'rise' : 'fall'
+              }.svg`}
+              width={16}
+              height={16}
+              alt=''
+            />
+            <strong>{companyData.latestPriceFormatted}</strong>
           </div>
-          <span>$-0.09 (-0.03%)</span>
+          <span>
+            {companyData.changeFormatted} ({companyData.changePercentFormatted})
+          </span>
         </div>
       </div>
+
       <ResponsiveContainer height='80%'>
         <AreaChart
-          data={data}
+          data={historicalData}
           style={{
             cursor: 'pointer',
           }}
-          margin={{ top: 0, right: 30, left: 10, bottom: 0 }}
+          margin={{ top: 10, right: 30, left: 10, bottom: 0 }}
         >
           <defs>
             <linearGradient id='colorPrice' x1='0' y1='0' x2='0' y2='1'>
@@ -150,7 +241,7 @@ export function StocksGrowth() {
             </linearGradient>
           </defs>
           <XAxis
-            dataKey='hour'
+            dataKey='minute'
             tick={{ fontSize: 11, fontWeight: 400 }}
             axisLine={false}
             tickLine={false}
@@ -163,18 +254,17 @@ export function StocksGrowth() {
             dx={-5}
             tickCount={6}
             tickFormatter={tick => {
-              return `$${tick}`;
-              /* return new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            }).format(tick); */
+              return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              }).format(tick);
             }}
           />
           <CartesianGrid strokeWidth={1} stroke='var(--gray-001)' />
           <Tooltip content={<CustomTooltip />} cursor={false} />
           <Area
             type='monotone'
-            dataKey='price'
+            dataKey='close'
             stroke='var(--primary)'
             strokeWidth={2}
             strokeOpacity={0.67}
