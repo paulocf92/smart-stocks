@@ -1,15 +1,27 @@
 import Image from 'next/image';
+import { useEffect } from 'react';
 import { FormEvent, useState } from 'react';
+
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { getStockData, selectStocks } from '../../store/modules/stocks';
 
 import styles from './styles.module.scss';
 
 export function SearchInput() {
+  const dispatch = useAppDispatch();
+  const { pending, error } = useAppSelector(selectStocks);
   const [searchedCompany, setSearchedCompany] = useState('');
 
   const searchCompany = (event: FormEvent) => {
     event.preventDefault();
-    console.log(searchedCompany);
+    dispatch(getStockData(searchedCompany));
   };
+
+  useEffect(() => {
+    if (!pending && !error) {
+      setSearchedCompany('');
+    }
+  }, [pending, error]);
 
   return (
     <form className={styles.searchInputForm} onSubmit={searchCompany}>

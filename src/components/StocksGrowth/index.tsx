@@ -1,26 +1,25 @@
 import Image from 'next/image';
-import { useEffect, useCallback } from 'react';
 import {
-  AreaChart,
   Area,
-  Tooltip,
+  AreaChart,
   CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  ResponsiveContainer,
 } from 'recharts';
+import { css } from '@emotion/react';
+import DotLoader from 'react-spinners/DotLoader';
+
 import { StockData } from '../../interfaces/stocks';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useAppSelector } from '../../store/hooks';
 import {
-  getStockData,
   selectStocks,
   stockDataSelector,
   stockHistoricalDataSelector,
 } from '../../store/modules/stocks';
-
-import { CustomTooltip } from './CustomTooltip';
 import { CustomActiveDot } from './CustomActiveDot';
-
+import { CustomTooltip } from './CustomTooltip';
 import styles from './styles.module.scss';
 
 interface StockDataFormatted extends StockData {
@@ -30,56 +29,67 @@ interface StockDataFormatted extends StockData {
 }
 
 export function StocksGrowth() {
-  const dispatch = useAppDispatch();
   const { pending, error } = useAppSelector(selectStocks);
   const stockData = useAppSelector<StockDataFormatted>(stockDataSelector);
   const historicalData = useAppSelector(stockHistoricalDataSelector);
 
-  const loadSampleData = useCallback(() => {
-    dispatch(getStockData('gsat'));
-  }, [dispatch]);
-
-  useEffect(() => {
-    loadSampleData();
-  }, [loadSampleData]);
-
   return (
     <div className={styles.stocksGrowthContainer}>
-      <div className={styles.stocksGrowthHeader}>
-        <div className={styles.stocksGrowthCompany}>
-          <div className={styles.stocksGrowthFavoriteTooltip}>
-            <button type='button'>
-              <Image src='/images/star.svg' width={24} height={24} alt='' />
-            </button>
+      <DotLoader
+        color={'var(--primary-translucent-001)'}
+        loading={pending}
+        css={css`
+          position: absolute;
+          top: 50%;
+          left: 50%;
+        `}
+        size={60}
+      />
 
-            <span>Adicionar aos favoritos</span>
-          </div>
-          <div>
-            <strong>{stockData.symbol}</strong>
-            <p>{stockData.companyName}</p>
-          </div>
-        </div>
-        <div
-          className={styles.stocksGrowthValuation}
-          style={{
-            color: stockData.change > 0 ? 'var(--success)' : 'var(--danger)',
-          }}
-        >
-          <div>
-            <Image
-              src={`/images/price-${
-                stockData.change > 0 ? 'rise' : 'fall'
-              }.svg`}
-              width={16}
-              height={16}
-              alt=''
-            />
-            <strong>{stockData.latestPriceStr}!!</strong>
-          </div>
-          <span>
-            {stockData.changeStr} ({stockData.changePercentStr})
-          </span>
-        </div>
+      <div className={styles.stocksGrowthHeader}>
+        {stockData?.symbol ? (
+          <>
+            <div className={styles.stocksGrowthCompany}>
+              <div className={styles.stocksGrowthFavoriteTooltip}>
+                <button type='button'>
+                  <Image src='/images/star.svg' width={24} height={24} alt='' />
+                </button>
+
+                <span>Adicionar aos favoritos</span>
+              </div>
+              <div>
+                <strong>{stockData.symbol}</strong>
+                <p>{stockData.companyName}</p>
+              </div>
+            </div>
+            <div
+              className={styles.stocksGrowthValuation}
+              style={{
+                color:
+                  stockData.change > 0 ? 'var(--success)' : 'var(--danger)',
+              }}
+            >
+              <div>
+                <Image
+                  src={`/images/price-${
+                    stockData.change > 0 ? 'rise' : 'fall'
+                  }.svg`}
+                  width={16}
+                  height={16}
+                  alt=''
+                />
+                <strong>{stockData.latestPriceStr}</strong>
+              </div>
+              <span>
+                {stockData.changeStr} ({stockData.changePercentStr})
+              </span>
+            </div>
+          </>
+        ) : (
+          <strong className={styles.stillBlank}>
+            Nada aqui por enquanto...
+          </strong>
+        )}
       </div>
 
       <ResponsiveContainer height='80%'>

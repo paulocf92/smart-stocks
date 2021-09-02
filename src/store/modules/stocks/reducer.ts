@@ -28,7 +28,6 @@ export const stocksReducer = createReducer(initialState, builder => {
     })
     .addCase(getStockData.fulfilled, (state, { payload }) => {
       state.pending = false;
-      console.log({ payload });
       state.stock = payload.stockData;
       state.historical = payload.stockHistoricalData;
     })

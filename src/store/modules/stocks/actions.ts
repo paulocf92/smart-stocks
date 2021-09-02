@@ -8,8 +8,6 @@ import { api } from '../../../services/api';
 export const getStockData = createAsyncThunk(
   '@stocks/GET_STOCK_DATA',
   async (ticker: string) => {
-    console.log({ ticker });
-
     const stockRequests = Promise.all([
       api.get<StockData>(`/${ticker}/quote`, {
         params: {
