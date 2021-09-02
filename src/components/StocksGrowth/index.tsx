@@ -1,6 +1,5 @@
 import Image from 'next/image';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useCallback } from 'react';
 import {
   AreaChart,
   Area,
@@ -10,174 +9,39 @@ import {
   YAxis,
   ResponsiveContainer,
 } from 'recharts';
-import { api } from '../../services/api';
+import { StockData } from '../../interfaces/stocks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import {
+  getStockData,
+  selectStocks,
+  stockDataSelector,
+  stockHistoricalDataSelector,
+} from '../../store/modules/stocks';
 
-const data2 = [
-  {
-    hour: '10:00',
-    price: 0,
-  },
-  {
-    hour: '10:30',
-    price: 700,
-  },
-  {
-    hour: '11:00',
-    price: 900,
-  },
-  {
-    hour: '12:00',
-    price: 800,
-  },
-  {
-    hour: '13:00',
-    price: 850,
-  },
-  {
-    hour: '14:00',
-    price: 50,
-  },
-  {
-    hour: '14:30',
-    price: 240,
-  },
-  {
-    hour: '15:00',
-    price: 100,
-  },
-  {
-    hour: '16:00',
-    price: 190,
-  },
-  {
-    hour: '17:00',
-    price: 240,
-  },
-  {
-    hour: '17:30',
-    price: 190,
-  },
-  {
-    hour: '18:00',
-    price: 250,
-  },
-];
+import { CustomTooltip } from './CustomTooltip';
+import { CustomActiveDot } from './CustomActiveDot';
 
 import styles from './styles.module.scss';
 
-interface CustomActiveDotProps {
-  cx?: number;
-  cy?: number;
+interface StockDataFormatted extends StockData {
+  latestPriceStr: string;
+  changeStr: string;
+  changePercentStr: string;
 }
-const CustomActiveDot = ({ cx, cy }: CustomActiveDotProps) => {
-  return (
-    <>
-      <circle
-        cx={cx}
-        cy={cy}
-        r='8'
-        stroke='var(--primary)'
-        strokeWidth='2'
-        fill='white'
-      />
-      <circle cx={cx} cy={cy} r='3' fill='var(--primary)' />
-    </>
-  );
-};
-
-interface CustomTooltipProps {
-  active?: boolean;
-  payload?: {
-    value: string;
-  }[];
-}
-const CustomTooltip = ({
-  active,
-  payload = [{ value: '' }],
-}: CustomTooltipProps) => {
-  if (active && !!payload.length) {
-    return <div className='stocksGrowthTooltip'>{`$${payload[0].value}`}</div>;
-  }
-
-  return null;
-};
-
-type CompanyData = {
-  companyName: string;
-  symbol: string;
-  latestPrice: number;
-  latestPriceFormatted: string;
-  change: number;
-  changeFormatted: string;
-  changePercent: number;
-  changePercentFormatted: string;
-};
-
-type HistoricalDataSlice = {
-  minute: string;
-  close: number;
-};
 
 export function StocksGrowth() {
-  const [companyData, setCompanyData] = useState<CompanyData>(
-    {} as CompanyData
-  );
-  const [historicalData, setHistoricalData] = useState<HistoricalDataSlice[]>();
+  const dispatch = useAppDispatch();
+  const { pending, error } = useAppSelector(selectStocks);
+  const stockData = useAppSelector<StockDataFormatted>(stockDataSelector);
+  const historicalData = useAppSelector(stockHistoricalDataSelector);
 
-  async function loadCompanyData() {
-    try {
-      const response = await api.get('/gsat/quote', {
-        params: {
-          token: process.env.NEXT_PUBLIC_IEXCLOUD_TOKEN,
-        },
-      });
-
-      const data: CompanyData = response.data;
-
-      setCompanyData({
-        ...data,
-        latestPriceFormatted: new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        }).format(data.latestPrice),
-        changeFormatted: new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        }).format(data.change),
-        changePercentFormatted: data.changePercent.toFixed(3) + '%',
-      });
-
-      console.log(data);
-    } catch (err) {
-      alert(err.message);
-    }
-  }
-
-  async function loadHistoricalData() {
-    try {
-      const response = await api.get('/gsat/chart/today', {
-        params: {
-          chartInterval: 30,
-          token: process.env.NEXT_PUBLIC_IEXCLOUD_TOKEN,
-        },
-      });
-
-      const data: HistoricalDataSlice[] = response.data;
-
-      const filtered = data.filter(slice => slice.close !== null);
-
-      setHistoricalData(filtered);
-
-      console.log(filtered);
-    } catch (err) {
-      alert(err.message);
-    }
-  }
+  const loadSampleData = useCallback(() => {
+    dispatch(getStockData('gsat'));
+  }, [dispatch]);
 
   useEffect(() => {
-    loadCompanyData();
-    loadHistoricalData();
-  }, []);
+    loadSampleData();
+  }, [loadSampleData]);
 
   return (
     <div className={styles.stocksGrowthContainer}>
@@ -191,29 +55,29 @@ export function StocksGrowth() {
             <span>Adicionar aos favoritos</span>
           </div>
           <div>
-            <strong>{companyData.symbol}</strong>
-            <p>{companyData.companyName}</p>
+            <strong>{stockData.symbol}</strong>
+            <p>{stockData.companyName}</p>
           </div>
         </div>
         <div
           className={styles.stocksGrowthValuation}
           style={{
-            color: companyData.change > 0 ? 'var(--success)' : 'var(--danger)',
+            color: stockData.change > 0 ? 'var(--success)' : 'var(--danger)',
           }}
         >
           <div>
             <Image
               src={`/images/price-${
-                companyData.change > 0 ? 'rise' : 'fall'
+                stockData.change > 0 ? 'rise' : 'fall'
               }.svg`}
               width={16}
               height={16}
               alt=''
             />
-            <strong>{companyData.latestPriceFormatted}</strong>
+            <strong>{stockData.latestPriceStr}!!</strong>
           </div>
           <span>
-            {companyData.changeFormatted} ({companyData.changePercentFormatted})
+            {stockData.changeStr} ({stockData.changePercentStr})
           </span>
         </div>
       </div>
