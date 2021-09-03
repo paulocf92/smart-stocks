@@ -9,6 +9,7 @@ import {
 import styles from './styles.module.scss';
 
 import { Card } from '../Card';
+import { getStockData } from '../../store/modules/stocks';
 
 export function FavoriteCompanies() {
   const dispatch = useAppDispatch();
@@ -51,7 +52,7 @@ export function FavoriteCompanies() {
                   borderTop: '1px solid rgba(43, 37, 63, 0.04)',
                   borderLeft: '1px solid rgba(43, 37, 63, 0.04)',
                 }}
-                onClick={() => {}}
+                onClick={() => dispatch(getStockData(symbol))}
               />
               <button
                 type='button'

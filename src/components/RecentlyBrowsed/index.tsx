@@ -2,8 +2,11 @@ import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 
-import { useAppSelector } from '../../store/hooks';
-import { recentlyBrowsedSelector } from '../../store/modules/stocks';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import {
+  getStockData,
+  recentlyBrowsedSelector,
+} from '../../store/modules/stocks';
 
 import styles from './styles.module.scss';
 
@@ -18,6 +21,7 @@ interface RecentlyBrowsedProps {
 }
 
 export function RecentlyBrowsed({ elementsToScroll }: RecentlyBrowsedProps) {
+  const dispatch = useAppDispatch();
   const { companies: recentCompanies, symbols } = useAppSelector(
     recentlyBrowsedSelector
   );
@@ -78,7 +82,7 @@ export function RecentlyBrowsed({ elementsToScroll }: RecentlyBrowsedProps) {
                 company={recentCompanies[symbol]}
                 star
                 extraStyles={i > 0 ? { marginLeft: 20 } : {}}
-                onClick={() => {}}
+                onClick={() => dispatch(getStockData(symbol))}
               />
             ))}
           </div>
