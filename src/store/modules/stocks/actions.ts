@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
-  StockData,
   HistoricalStockDataSlice,
+  StockData,
 } from '../../../interfaces/stocks';
 import { api } from '../../../services/api';
 

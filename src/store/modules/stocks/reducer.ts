@@ -10,6 +10,12 @@ export type StockDataState = {
     data: StockData;
     historical: HistoricalStockDataSlice[];
   };
+  recentlyBrowsed: {
+    companies: {
+      [id: string]: StockData;
+    };
+    symbols: string[];
+  };
   pending: boolean;
   error: boolean;
 };
@@ -18,6 +24,10 @@ const initialState: StockDataState = {
   currentStock: {
     data: {} as StockData,
     historical: [],
+  },
+  recentlyBrowsed: {
+    companies: {},
+    symbols: [],
   },
   pending: false,
   error: false,
@@ -33,6 +43,26 @@ export const stocksReducer = createReducer(initialState, builder => {
       state.pending = false;
       state.currentStock.data = payload.stockData;
       state.currentStock.historical = payload.stockHistoricalData;
+
+      const { symbol: retrievedStockSymbol } = payload.stockData;
+
+      const companyExists =
+        !!state.recentlyBrowsed.companies[retrievedStockSymbol]?.symbol;
+
+      if (companyExists) {
+        delete state.recentlyBrowsed.companies[retrievedStockSymbol];
+
+        state.recentlyBrowsed.symbols = [
+          retrievedStockSymbol,
+          ...state.recentlyBrowsed.symbols.filter(
+            symbol => symbol !== retrievedStockSymbol
+          ),
+        ];
+      } else {
+        state.recentlyBrowsed.symbols.push(retrievedStockSymbol);
+      }
+
+      state.recentlyBrowsed.companies[retrievedStockSymbol] = payload.stockData;
     })
     .addCase(getStockData.rejected, state => {
       state.pending = false;
