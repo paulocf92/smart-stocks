@@ -1,5 +1,4 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { AxiosResponse } from 'axios';
 import {
   StockData,
   HistoricalStockDataSlice,

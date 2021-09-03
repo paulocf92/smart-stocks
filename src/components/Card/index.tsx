@@ -1,17 +1,10 @@
 import Image from 'next/image';
+import { StockDataFormatted } from '../../interfaces/stocks';
 
 import styles from './styles.module.scss';
 
-export type Company = {
-  id: string;
-  name: string;
-  ticker: string;
-  valuation: string;
-  delta: 'fall' | 'rise';
-};
-
 interface CardProps {
-  company: Company;
+  company: StockDataFormatted;
   star?: boolean;
   extraStyles?: object;
   onClick(): void;
@@ -27,51 +20,46 @@ export function Card({
     <button className={styles.card} style={extraStyles} onClick={onClick}>
       <div className={styles.cardCompany}>
         {star && <Image src='/images/star.svg' width={24} height={24} alt='' />}
-        <div style={{ position: 'relative' }}>
+        <div className={styles.companyIcon}>
           <Image
-            src={`/placeholder/${company.name.toLowerCase()}.svg`}
+            src={`https://storage.googleapis.com/iex/api/logos/${company.symbol}.png`}
             width={36}
             height={36}
             alt=''
           />
-          <svg
-            height='36'
-            width='36'
-            style={{
-              position: 'absolute',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              zIndex: 2,
-            }}
-          >
-            <circle
-              cx='18'
-              cy='18'
-              r='17'
-              stroke='var(--white)'
-              fill='none'
-              strokeWidth='2'
-              strokeOpacity='0.5'
-            ></circle>
-          </svg>
+          {
+            <svg height='36' width='36'>
+              <circle
+                cx='18'
+                cy='18'
+                r='17'
+                stroke='var(--white)'
+                fill='none'
+                strokeWidth='2'
+                strokeOpacity='0.5'
+              ></circle>
+            </svg>
+          }
         </div>
 
-        <div>
-          <strong>{company.ticker}</strong>
-          <p>{company.name}</p>
+        <div className={styles.companyName}>
+          <strong>{company.symbol}</strong>
+          <p>{company.companyName}</p>
         </div>
       </div>
       <div className={styles.cardCompanyValuation}>
         <span
           style={{
             color:
-              company.delta === 'rise' ? 'var(--success)' : 'var(--danger)',
+              company.changePercent > 0 ? 'var(--success)' : 'var(--danger)',
           }}
         >
-          {company.valuation}
+          {company.changePercentStr}
         </span>
         <Image
-          src={`/images/price-${company.delta}.svg`}
+          src={`/images/price-${
+            company.changePercent > 0 ? 'rise' : 'fall'
+          }.svg`}
           width={16}
           height={16}
           alt=''

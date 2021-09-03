@@ -1,5 +1,6 @@
 import { RootState } from '../../store';
 import { createSelector } from '@reduxjs/toolkit';
+import { formatStockData } from '../format';
 
 export const selectStocks = (state: RootState) => state.stocks;
 
@@ -7,18 +8,9 @@ const selectStockData = (state: RootState) => state.stocks.stock;
 
 const selectStockHistoricalData = (state: RootState) => state.stocks.historical;
 
-export const stockDataSelector = createSelector(selectStockData, state => ({
-  ...state,
-  latestPriceStr: new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(state.latestPrice),
-  changeStr: new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(state.change),
-  changePercentStr: state.changePercent?.toFixed(3) + '%',
-}));
+export const stockDataSelector = createSelector(selectStockData, state =>
+  formatStockData(state)
+);
 
 export const stockHistoricalDataSelector = createSelector(
   selectStockHistoricalData,

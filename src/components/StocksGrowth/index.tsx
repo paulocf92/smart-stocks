@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useMemo } from 'react';
 import {
   Area,
   AreaChart,
@@ -11,27 +12,43 @@ import {
 import { css } from '@emotion/react';
 import DotLoader from 'react-spinners/DotLoader';
 
-import { StockData } from '../../interfaces/stocks';
-import { useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   selectStocks,
   stockDataSelector,
   stockHistoricalDataSelector,
 } from '../../store/modules/stocks';
+import {
+  addFavorite,
+  removeFavorite,
+  selectUser,
+} from '../../store/modules/user';
 import { CustomActiveDot } from './CustomActiveDot';
 import { CustomTooltip } from './CustomTooltip';
 import styles from './styles.module.scss';
 
-interface StockDataFormatted extends StockData {
-  latestPriceStr: string;
-  changeStr: string;
-  changePercentStr: string;
-}
-
 export function StocksGrowth() {
+  const dispatch = useAppDispatch();
+
   const { pending, error } = useAppSelector(selectStocks);
-  const stockData = useAppSelector<StockDataFormatted>(stockDataSelector);
+  const stockData = useAppSelector(stockDataSelector);
   const historicalData = useAppSelector(stockHistoricalDataSelector);
+
+  const { favorites } = useAppSelector(selectUser);
+
+  const isFavorite = useMemo(() => {
+    const stockSymbol = stockData?.symbol;
+    const stock = favorites[stockSymbol];
+    return !!stock?.symbol;
+  }, [stockData, favorites]);
+
+  function handleFavoriteToggle() {
+    if (isFavorite) {
+      dispatch(removeFavorite(stockData?.symbol));
+    } else {
+      dispatch(addFavorite(stockData));
+    }
+  }
 
   return (
     <div className={styles.stocksGrowthContainer}>
@@ -51,11 +68,20 @@ export function StocksGrowth() {
           <>
             <div className={styles.stocksGrowthCompany}>
               <div className={styles.stocksGrowthFavoriteTooltip}>
-                <button type='button'>
-                  <Image src='/images/star.svg' width={24} height={24} alt='' />
+                <button type='button' onClick={handleFavoriteToggle}>
+                  <Image
+                    src={`/images/star${isFavorite ? '-filled' : ''}.svg`}
+                    width={24}
+                    height={24}
+                    alt=''
+                  />
                 </button>
 
-                <span>Adicionar aos favoritos</span>
+                <span>
+                  {isFavorite
+                    ? 'Remover dos favoritos'
+                    : 'Adicionar aos favoritos'}
+                </span>
               </div>
               <div>
                 <strong>{stockData.symbol}</strong>
