@@ -8,7 +8,7 @@ import {
   selectStocks,
   stockDataSelector,
 } from '../../store/modules/stocks';
-import { updateFavorite, selectUser } from '../../store/modules/user';
+import { updateFavorite, favoritesSelector } from '../../store/modules/user';
 
 import styles from './styles.module.scss';
 
@@ -16,7 +16,7 @@ export function SearchInput() {
   const dispatch = useAppDispatch();
   const { pending, error } = useAppSelector(selectStocks);
   const stockData = useAppSelector(stockDataSelector);
-  const { favorites } = useAppSelector(selectUser);
+  const { favorites } = useAppSelector(favoritesSelector);
 
   const [searchedCompany, setSearchedCompany] = useState('');
 

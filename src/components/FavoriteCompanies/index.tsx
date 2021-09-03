@@ -1,6 +1,10 @@
 import Image from 'next/image';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { removeFavorite, selectUser } from '../../store/modules/user';
+import {
+  favoritesSelector,
+  removeFavorite,
+  selectUser,
+} from '../../store/modules/user';
 
 import styles from './styles.module.scss';
 
@@ -8,7 +12,8 @@ import { Card } from '../Card';
 
 export function FavoriteCompanies() {
   const dispatch = useAppDispatch();
-  const { user, favorites, symbols } = useAppSelector(selectUser);
+  const { user } = useAppSelector(selectUser);
+  const { favorites, symbols } = useAppSelector(favoritesSelector);
 
   return (
     <aside className={styles.favoriteContainer}>

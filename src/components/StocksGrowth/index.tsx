@@ -20,8 +20,8 @@ import {
 } from '../../store/modules/stocks';
 import {
   addFavorite,
+  favoritesSelector,
   removeFavorite,
-  selectUser,
 } from '../../store/modules/user';
 import { CustomActiveDot } from './CustomActiveDot';
 import { CustomTooltip } from './CustomTooltip';
@@ -34,7 +34,7 @@ export function StocksGrowth() {
   const stockData = useAppSelector(stockDataSelector);
   const historicalData = useAppSelector(stockHistoricalDataSelector);
 
-  const { favorites } = useAppSelector(selectUser);
+  const { favorites } = useAppSelector(favoritesSelector);
 
   const isFavorite = useMemo(() => {
     const stockSymbol = stockData?.symbol;
