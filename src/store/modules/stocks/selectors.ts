@@ -4,9 +4,10 @@ import { formatStockData } from '../format';
 
 export const selectStocks = (state: RootState) => state.stocks;
 
-const selectStockData = (state: RootState) => state.stocks.stock;
+const selectStockData = (state: RootState) => state.stocks.currentStock.data;
 
-const selectStockHistoricalData = (state: RootState) => state.stocks.historical;
+const selectStockHistoricalData = (state: RootState) =>
+  state.stocks.currentStock.historical;
 
 export const stockDataSelector = createSelector(selectStockData, state =>
   formatStockData(state)

@@ -1,6 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { StockDataFormatted } from '../../../interfaces/stocks';
-import { formatStockData } from '../format';
 import { addFavorite, removeFavorite, updateFavorite } from './actions';
 
 export type UserDataState = {
@@ -24,8 +23,7 @@ const initialState: UserDataState = {
 export const userReducer = createReducer(initialState, builder => {
   builder
     .addCase(addFavorite, (state, { payload }) => {
-      const formatted = formatStockData(payload);
-      state.favorites[payload.symbol] = formatted;
+      state.favorites[payload.symbol] = payload;
       state.symbols.push(payload.symbol);
     })
     .addCase(updateFavorite, (state, { payload }) => {

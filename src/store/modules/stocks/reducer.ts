@@ -6,15 +6,19 @@ import {
 import { getStockData } from './actions';
 
 export type StockDataState = {
-  stock: StockData;
-  historical: HistoricalStockDataSlice[];
+  currentStock: {
+    data: StockData;
+    historical: HistoricalStockDataSlice[];
+  };
   pending: boolean;
   error: boolean;
 };
 
 const initialState: StockDataState = {
-  stock: {} as StockData,
-  historical: [],
+  currentStock: {
+    data: {} as StockData,
+    historical: [],
+  },
   pending: false,
   error: false,
 };
@@ -27,8 +31,8 @@ export const stocksReducer = createReducer(initialState, builder => {
     })
     .addCase(getStockData.fulfilled, (state, { payload }) => {
       state.pending = false;
-      state.stock = payload.stockData;
-      state.historical = payload.stockHistoricalData;
+      state.currentStock.data = payload.stockData;
+      state.currentStock.historical = payload.stockHistoricalData;
     })
     .addCase(getStockData.rejected, state => {
       state.pending = false;
