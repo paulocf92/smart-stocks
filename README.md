@@ -24,11 +24,14 @@ Search and track your favorite stocks!
 Main technologies used:
 
 - Next.js (React.js)
-- Recharts
 - Redux Toolkit
+- ⭐ Styled Components
+
+Additional libs:
+
+- Recharts
 - Axios
 - React Spinners
-- ⭐ Styled Components
 
 # ⚙️ Installing and Running
 
