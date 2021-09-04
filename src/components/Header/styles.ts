@@ -1,8 +1,11 @@
-.headerContainer {
-  margin-right: 1rem;
-}
+import styled from 'styled-components';
+import theme from '../../styles/theme';
 
-.headerContent {
+export const Container = styled.header`
+  margin-right: 1rem;
+`;
+
+export const Content = styled.div`
   height: 100vh;
 
   display: flex;
@@ -38,7 +41,7 @@
       &.active::after {
         content: '';
         position: absolute;
-        background: var(--secondary);
+        background: ${theme.colors.secondary};
         border-radius: 0 4px 4px 0;
         height: 100%;
         width: 4px;
@@ -51,4 +54,4 @@
   button {
     margin-left: auto;
   }
-}
+`;

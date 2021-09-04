@@ -1,3 +1,5 @@
+import theme from '../../../styles/theme';
+
 interface CustomActiveDotProps {
   cx?: number;
   cy?: number;
@@ -10,11 +12,11 @@ export function CustomActiveDot({ cx, cy }: CustomActiveDotProps) {
         cx={cx}
         cy={cy}
         r='8'
-        stroke='var(--primary)'
+        stroke={theme.colors.primary}
         strokeWidth='2'
         fill='white'
       />
-      <circle cx={cx} cy={cy} r='3' fill='var(--primary)' />
+      <circle cx={cx} cy={cy} r='3' fill={theme.colors.primary} />
     </>
   );
 }

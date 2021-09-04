@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
@@ -8,11 +8,11 @@ import {
   recentlyBrowsedSelector,
   selectStocks,
 } from '../../store/modules/stocks';
-
-import styles from './styles.module.scss';
+import { favoritesSelector } from '../../store/modules/user';
 
 import { Card } from '../Card';
-import { favoritesSelector } from '../../store/modules/user';
+
+import { Container, Header, Title, Buttons, Ticker } from './styles';
 
 const PARENT_LEFT_PADDING = 24;
 const CHILD_WIDTH = 360;
@@ -67,40 +67,37 @@ export function RecentlyBrowsed({ elementsToScroll }: RecentlyBrowsedProps) {
   );
 
   return (
-    <div className={styles.recentlyBrowsedContainer}>
-      <div className={styles.recentlyBrowsedHeader}>
-        <div className={styles.recentlyBrowsedTitle}>
+    <Container>
+      <Header>
+        <Title>
           <Image src='/images/stats.svg' width={24} height={24} alt='' />
           <strong>Empresas recentes</strong>
-        </div>
-        <div className={styles.recentlyBrowsedButtons}>
-          <button type='button' onClick={() => executeScroll('backward')}>
-            <HiOutlineChevronLeft color='var(--primary)' size={20} />
+        </Title>
+        <Buttons>
+          <button onClick={() => executeScroll('backward')}>
+            <HiOutlineChevronLeft size={20} />
           </button>
-          <button type='button' onClick={() => executeScroll('forward')}>
-            <HiOutlineChevronRight color='var(--primary)' size={20} />
+          <button onClick={() => executeScroll('forward')}>
+            <HiOutlineChevronRight size={20} />
           </button>
-        </div>
-      </div>
+        </Buttons>
+      </Header>
 
-      <div className={styles.tickerScrollContainer}>
-        <div className={styles.tickerScrollContent} ref={containerRef}>
-          <div className={styles.tickerScrollFlex}>
-            {symbols.map((symbol, i: number) => (
+      <Ticker>
+        <div ref={containerRef}>
+          <div>
+            {symbols.map(symbol => (
               <Card
                 key={symbol}
-                company={{
-                  ...recentCompanies[symbol],
-                  isFavorite: !!favorites[symbol]?.symbol,
-                }}
+                company={recentCompanies[symbol]}
+                isFavorite={!!favorites[symbol]?.symbol}
                 star
-                extraStyles={i > 0 ? { marginLeft: 20 } : {}}
                 onClick={() => dispatch(getStockData(symbol))}
               />
             ))}
           </div>
         </div>
-      </div>
-    </div>
+      </Ticker>
+    </Container>
   );
 }

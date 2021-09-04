@@ -9,8 +9,6 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { css } from '@emotion/react';
-import DotLoader from 'react-spinners/DotLoader';
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
@@ -23,9 +21,22 @@ import {
   favoritesSelector,
   removeFavorite,
 } from '../../store/modules/user';
+
 import { CustomActiveDot } from './CustomActiveDot';
 import { CustomTooltip } from './CustomTooltip';
-import styles from './styles.module.scss';
+
+import theme from '../../styles/theme';
+
+import {
+  Container,
+  Loader,
+  Header,
+  Company,
+  TooltipWrapper,
+  Name,
+  Valuation,
+  Blank,
+} from './styles';
 
 export function StocksGrowth() {
   const dispatch = useAppDispatch();
@@ -51,24 +62,15 @@ export function StocksGrowth() {
   }
 
   return (
-    <div className={styles.stocksGrowthContainer}>
-      <DotLoader
-        color={'var(--primary-translucent-001)'}
-        loading={pending}
-        css={css`
-          position: absolute;
-          top: 50%;
-          left: 50%;
-        `}
-        size={60}
-      />
+    <Container>
+      <Loader loading={pending} />
 
-      <div className={styles.stocksGrowthHeader}>
+      <Header>
         {stockData?.symbol ? (
           <>
-            <div className={styles.stocksGrowthCompany}>
-              <div className={styles.stocksGrowthFavoriteTooltip}>
-                <button type='button' onClick={handleFavoriteToggle}>
+            <Company>
+              <TooltipWrapper>
+                <button onClick={handleFavoriteToggle}>
                   <Image
                     src={`/images/star${isFavorite ? '-filled' : ''}.svg`}
                     width={24}
@@ -82,19 +84,13 @@ export function StocksGrowth() {
                     ? 'Remover dos favoritos'
                     : 'Adicionar aos favoritos'}
                 </span>
-              </div>
-              <div>
+              </TooltipWrapper>
+              <Name>
                 <strong>{stockData.symbol}</strong>
                 <p>{stockData.companyName}</p>
-              </div>
-            </div>
-            <div
-              className={styles.stocksGrowthValuation}
-              style={{
-                color:
-                  stockData.change > 0 ? 'var(--success)' : 'var(--danger)',
-              }}
-            >
+              </Name>
+            </Company>
+            <Valuation isIncrease={stockData.change > 0}>
               <div>
                 <Image
                   src={`/images/price-${
@@ -109,14 +105,12 @@ export function StocksGrowth() {
               <span>
                 {stockData.changeStr} ({stockData.changePercentStr})
               </span>
-            </div>
+            </Valuation>
           </>
         ) : (
-          <strong className={styles.stillBlank}>
-            Nada aqui por enquanto...
-          </strong>
+          <Blank>Nada aqui por enquanto...</Blank>
         )}
-      </div>
+      </Header>
 
       <ResponsiveContainer height='80%'>
         <AreaChart
@@ -130,12 +124,12 @@ export function StocksGrowth() {
             <linearGradient id='colorPrice' x1='0' y1='0' x2='0' y2='1'>
               <stop
                 offset='0%'
-                stopColor='var(--primary-translucent-001)'
+                stopColor={theme.colors.primary_translucent_001}
                 stopOpacity={0.3}
               />
               <stop
                 offset='100%'
-                stopColor='var(--primary-translucent-001)'
+                stopColor={theme.colors.primary_translucent_001}
                 stopOpacity={0}
               />
             </linearGradient>
@@ -160,21 +154,21 @@ export function StocksGrowth() {
               }).format(tick);
             }}
           />
-          <CartesianGrid strokeWidth={1} stroke='var(--gray-001)' />
+          <CartesianGrid strokeWidth={1} stroke={theme.colors.gray_001} />
           <Tooltip content={<CustomTooltip />} cursor={false} />
           <Area
             type='monotone'
             dataKey='close'
-            stroke='var(--primary)'
+            stroke={theme.colors.primary}
             strokeWidth={2}
             strokeOpacity={0.67}
-            dot={{ fill: 'var(--primary)', strokeWidth: 0, r: 2.5 }}
+            dot={{ fill: theme.colors.primary, strokeWidth: 0, r: 2.5 }}
             activeDot={<CustomActiveDot />}
             fillOpacity={1}
             fill='url(#colorPrice)'
           />
         </AreaChart>
       </ResponsiveContainer>
-    </div>
+    </Container>
   );
 }

@@ -1,13 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import styles from './styles.module.scss';
 import { ActiveLink } from '../ActiveLink';
+
+import { Container, Content } from './styles';
 
 export function Header() {
   return (
-    <header className={styles.headerContainer}>
-      <div className={styles.headerContent}>
+    <Container>
+      <Content>
         <Link href='/'>
           <a>
             <Image
@@ -20,18 +21,16 @@ export function Header() {
           </a>
         </Link>
         <nav>
-          <ActiveLink href='/' activeClassName={styles.active}>
-            <a>
-              <Image
-                src='/images/home-nav.svg'
-                width={32}
-                height={32}
-                alt='Home'
-              />
-            </a>
+          <ActiveLink href='/'>
+            <Image
+              src='/images/home-nav.svg'
+              width={32}
+              height={32}
+              alt='Home'
+            />
           </ActiveLink>
         </nav>
-      </div>
-    </header>
+      </Content>
+    </Container>
   );
 }
