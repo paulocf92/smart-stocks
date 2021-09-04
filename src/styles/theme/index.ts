@@ -13,8 +13,10 @@ const theme = {
     secondary: '#f06400',
 
     danger: '#d64b45',
+    danger_translucent: 'rgba(225, 61, 55, 0.4)',
 
     success: '#79c300',
+    success_translucent: 'rgba(126, 204, 0, 0.4)',
   },
 };
 

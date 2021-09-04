@@ -10,6 +10,7 @@ import { RecentlyBrowsed } from '../components/RecentlyBrowsed';
 import { FavoriteCompanies } from '../components/FavoriteCompanies';
 
 import { Wrapper, Container, Content, PageTitle } from './styles';
+import { Marquee } from '../components/Marquee';
 
 export default function Home() {
   return (
@@ -34,9 +35,8 @@ export default function Home() {
             </PageTitle>
 
             <SearchInput />
-
+            <Marquee />
             <StocksGrowth />
-
             <RecentlyBrowsed />
           </Content>
         </Container>
