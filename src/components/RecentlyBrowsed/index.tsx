@@ -15,7 +15,7 @@ import { Card } from '../Card';
 import { favoritesSelector } from '../../store/modules/user';
 
 const PARENT_LEFT_PADDING = 24;
-const CHILD_WIDTH = 300;
+const CHILD_WIDTH = 360;
 const CHILD_PADDED_WIDTH = CHILD_WIDTH + 24;
 
 interface RecentlyBrowsedProps {
