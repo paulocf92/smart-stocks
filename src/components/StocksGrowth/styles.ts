@@ -36,6 +36,8 @@ export const Company = styled.div`
     border: 0;
     background: none;
 
+    outline: 0;
+
     transition: opacity 0.2s;
 
     &:hover {

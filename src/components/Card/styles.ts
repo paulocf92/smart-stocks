@@ -19,9 +19,11 @@ export const Container = styled.button<ContainerProps>`
   background-color: ${({ theme }) => theme.colors.white};
 
   border-radius: 8px;
-  padding: 15px 10px;
 
+  padding: 15px 10px;
   margin: 4px 4px 10px;
+
+  outline: 0;
 
   transition: box-shadow 0.2s, transform 0.2s;
 
