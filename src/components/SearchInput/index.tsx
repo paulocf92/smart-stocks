@@ -10,7 +10,7 @@ import {
 } from '../../store/modules/stocks';
 import { updateFavorite, favoritesSelector } from '../../store/modules/user';
 
-import styles from './styles.module.scss';
+import { Container } from './styles';
 
 export function SearchInput() {
   const dispatch = useAppDispatch();
@@ -47,9 +47,8 @@ export function SearchInput() {
   }, [pending, error]);
 
   return (
-    <form className={styles.searchInputForm} onSubmit={searchCompany}>
+    <Container onSubmit={searchCompany}>
       <input
-        className={styles.searchInput}
         type='text'
         id='search'
         name='search'
@@ -58,9 +57,9 @@ export function SearchInput() {
         placeholder='Buscar empresa'
         required
       />
-      <button type='submit' className={styles.searchInputIcon}>
+      <button type='submit'>
         <Image src='/images/search.svg' width={26} height={26} alt='' />
       </button>
-    </form>
+    </Container>
   );
 }
