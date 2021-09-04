@@ -15,7 +15,7 @@
   </a>
 </p>
 
-Search and track your favorite stocks listed under NASDAQ.
+Search and track your favorite stocks!
 
 # 🚀 About the project
 
@@ -28,6 +28,7 @@ Main technologies used:
 - Redux Toolkit
 - Axios
 - React Spinners
+- ⭐ Styled Components
 
 # ⚙️ Installing and Running
 
