@@ -1,15 +1,50 @@
 import Image from 'next/image';
+import { useEffect } from 'react';
 import { FormEvent, useState } from 'react';
+
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import {
+  getStockData,
+  selectStocks,
+  stockDataSelector,
+} from '../../store/modules/stocks';
+import { updateFavorite, favoritesSelector } from '../../store/modules/user';
 
 import styles from './styles.module.scss';
 
 export function SearchInput() {
+  const dispatch = useAppDispatch();
+  const { pending, error } = useAppSelector(selectStocks);
+  const stockData = useAppSelector(stockDataSelector);
+  const { favorites } = useAppSelector(favoritesSelector);
+
   const [searchedCompany, setSearchedCompany] = useState('');
 
-  const searchCompany = (event: FormEvent) => {
+  function searchCompany(event: FormEvent) {
     event.preventDefault();
-    console.log(searchedCompany);
-  };
+
+    if (searchedCompany) {
+      dispatch(getStockData(searchedCompany));
+    }
+  }
+
+  useEffect(() => {
+    const { symbol } = stockData;
+
+    // Update favorite on latestPrice change
+    if (
+      favorites[symbol] &&
+      favorites[symbol].latestPrice !== stockData.latestPrice
+    ) {
+      dispatch(updateFavorite(stockData));
+    }
+  }, [stockData, favorites, dispatch]);
+
+  useEffect(() => {
+    if (!pending && !error) {
+      setSearchedCompany('');
+    }
+  }, [pending, error]);
 
   return (
     <form className={styles.searchInputForm} onSubmit={searchCompany}>

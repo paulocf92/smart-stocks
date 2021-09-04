@@ -1,14 +1,16 @@
+import { Provider } from 'react-redux';
 import type { AppProps } from 'next/app';
-import { Header } from '../components/Header';
+
+import { store } from '../store/store';
 
 import '../styles/global.scss';
+import '../styles/rechartsTooltip.scss';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <div style={{ display: 'flex' }}>
-      <Header />
+    <Provider store={store}>
       <Component {...pageProps} />
-    </div>
+    </Provider>
   );
 }
 export default MyApp;

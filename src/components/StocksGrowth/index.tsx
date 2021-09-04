@@ -1,139 +1,130 @@
 import Image from 'next/image';
-import { HTMLAttributes } from 'react';
+import { useMemo } from 'react';
 import {
-  AreaChart,
   Area,
-  Tooltip,
+  AreaChart,
   CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  ResponsiveContainer,
 } from 'recharts';
+import { css } from '@emotion/react';
+import DotLoader from 'react-spinners/DotLoader';
 
-const data = [
-  {
-    hour: '10:00',
-    price: 0,
-  },
-  {
-    hour: '10:30',
-    price: 700,
-  },
-  {
-    hour: '11:00',
-    price: 900,
-  },
-  {
-    hour: '12:00',
-    price: 800,
-  },
-  {
-    hour: '13:00',
-    price: 850,
-  },
-  {
-    hour: '14:00',
-    price: 50,
-  },
-  {
-    hour: '14:30',
-    price: 240,
-  },
-  {
-    hour: '15:00',
-    price: 100,
-  },
-  {
-    hour: '16:00',
-    price: 190,
-  },
-  {
-    hour: '17:00',
-    price: 240,
-  },
-  {
-    hour: '17:30',
-    price: 190,
-  },
-  {
-    hour: '18:00',
-    price: 250,
-  },
-];
-
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import {
+  selectStocks,
+  stockDataSelector,
+  stockHistoricalDataSelector,
+} from '../../store/modules/stocks';
+import {
+  addFavorite,
+  favoritesSelector,
+  removeFavorite,
+} from '../../store/modules/user';
+import { CustomActiveDot } from './CustomActiveDot';
+import { CustomTooltip } from './CustomTooltip';
 import styles from './styles.module.scss';
 
-interface CustomActiveDotProps {
-  cx?: number;
-  cy?: number;
-}
-const CustomActiveDot = ({ cx, cy }: CustomActiveDotProps) => {
-  return (
-    <>
-      <circle
-        cx={cx}
-        cy={cy}
-        r='8'
-        stroke='var(--primary)'
-        strokeWidth='2'
-        fill='white'
-      />
-      <circle cx={cx} cy={cy} r='3' fill='var(--primary)' />
-    </>
-  );
-};
+export function StocksGrowth() {
+  const dispatch = useAppDispatch();
 
-interface CustomTooltipProps {
-  active?: boolean;
-  payload?: {
-    value: string;
-  }[];
-  label?: string;
-}
-const CustomTooltip = ({
-  active,
-  payload = [{ value: '' }],
-  label,
-}: CustomTooltipProps) => {
-  if (active) {
-    return <div className='stocksGrowthTooltip'>{`$${payload[0].value}`}</div>;
+  const { pending, error } = useAppSelector(selectStocks);
+  const stockData = useAppSelector(stockDataSelector);
+  const historicalData = useAppSelector(stockHistoricalDataSelector);
+
+  const { favorites } = useAppSelector(favoritesSelector);
+
+  const isFavorite = useMemo(() => {
+    const stockSymbol = stockData?.symbol;
+    const stock = favorites[stockSymbol];
+    return !!stock?.symbol;
+  }, [stockData, favorites]);
+
+  function handleFavoriteToggle() {
+    if (isFavorite) {
+      dispatch(removeFavorite(stockData?.symbol));
+    } else {
+      dispatch(addFavorite(stockData));
+    }
   }
 
-  return null;
-};
-
-export function StocksGrowth() {
   return (
     <div className={styles.stocksGrowthContainer}>
-      <div className={styles.stocksGrowthHeader}>
-        <div className={styles.stocksGrowthCompany}>
-          <div className={styles.stocksGrowthFavoriteTooltip}>
-            <button type='button'>
-              <Image src='/images/star.svg' width={24} height={24} alt='' />
-            </button>
+      <DotLoader
+        color={'var(--primary-translucent-001)'}
+        loading={pending}
+        css={css`
+          position: absolute;
+          top: 50%;
+          left: 50%;
+        `}
+        size={60}
+      />
 
-            <span>Adicionar aos favoritos</span>
-          </div>
-          <div>
-            <strong>MSFT</strong>
-            <p>Microsoft</p>
-          </div>
-        </div>
-        <div className={styles.stocksGrowthValuation}>
-          <div>
-            <Image src='/images/price-fall.svg' width={16} height={16} alt='' />
-            <strong>$265,42</strong>
-          </div>
-          <span>$-0.09 (-0.03%)</span>
-        </div>
+      <div className={styles.stocksGrowthHeader}>
+        {stockData?.symbol ? (
+          <>
+            <div className={styles.stocksGrowthCompany}>
+              <div className={styles.stocksGrowthFavoriteTooltip}>
+                <button type='button' onClick={handleFavoriteToggle}>
+                  <Image
+                    src={`/images/star${isFavorite ? '-filled' : ''}.svg`}
+                    width={24}
+                    height={24}
+                    alt=''
+                  />
+                </button>
+
+                <span>
+                  {isFavorite
+                    ? 'Remover dos favoritos'
+                    : 'Adicionar aos favoritos'}
+                </span>
+              </div>
+              <div>
+                <strong>{stockData.symbol}</strong>
+                <p>{stockData.companyName}</p>
+              </div>
+            </div>
+            <div
+              className={styles.stocksGrowthValuation}
+              style={{
+                color:
+                  stockData.change > 0 ? 'var(--success)' : 'var(--danger)',
+              }}
+            >
+              <div>
+                <Image
+                  src={`/images/price-${
+                    stockData.change > 0 ? 'rise' : 'fall'
+                  }.svg`}
+                  width={16}
+                  height={16}
+                  alt=''
+                />
+                <strong>{stockData.latestPriceStr}</strong>
+              </div>
+              <span>
+                {stockData.changeStr} ({stockData.changePercentStr})
+              </span>
+            </div>
+          </>
+        ) : (
+          <strong className={styles.stillBlank}>
+            Nada aqui por enquanto...
+          </strong>
+        )}
       </div>
+
       <ResponsiveContainer height='80%'>
         <AreaChart
-          data={data}
+          data={historicalData}
           style={{
             cursor: 'pointer',
           }}
-          margin={{ top: 0, right: 30, left: 10, bottom: 0 }}
+          margin={{ top: 10, right: 30, left: 20, bottom: 0 }}
         >
           <defs>
             <linearGradient id='colorPrice' x1='0' y1='0' x2='0' y2='1'>
@@ -150,7 +141,7 @@ export function StocksGrowth() {
             </linearGradient>
           </defs>
           <XAxis
-            dataKey='hour'
+            dataKey='minute'
             tick={{ fontSize: 11, fontWeight: 400 }}
             axisLine={false}
             tickLine={false}
@@ -163,18 +154,17 @@ export function StocksGrowth() {
             dx={-5}
             tickCount={6}
             tickFormatter={tick => {
-              return `$${tick}`;
-              /* return new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            }).format(tick); */
+              return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              }).format(tick);
             }}
           />
           <CartesianGrid strokeWidth={1} stroke='var(--gray-001)' />
           <Tooltip content={<CustomTooltip />} cursor={false} />
           <Area
             type='monotone'
-            dataKey='price'
+            dataKey='close'
             stroke='var(--primary)'
             strokeWidth={2}
             strokeOpacity={0.67}

@@ -1,65 +1,21 @@
 import Image from 'next/image';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
+
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import {
+  getStockData,
+  recentlyBrowsedSelector,
+  selectStocks,
+} from '../../store/modules/stocks';
 
 import styles from './styles.module.scss';
 
-import { Card, Company } from '../Card';
-
-const data: Company[] = [
-  {
-    id: '0',
-    ticker: 'FB',
-    name: 'Facebook',
-    valuation: '+2.3%',
-    delta: 'rise',
-  },
-  {
-    id: '1',
-    ticker: 'AAPL',
-    name: 'Apple',
-    valuation: '-0.12%',
-    delta: 'fall',
-  },
-  {
-    id: '2',
-    ticker: 'ADBE',
-    name: 'Adobe',
-    valuation: '+0.1%',
-    delta: 'rise',
-  },
-  {
-    id: '3',
-    ticker: 'MSFT',
-    name: 'Microsoft',
-    valuation: '+4%',
-    delta: 'rise',
-  },
-  {
-    id: '4',
-    ticker: 'SBUX',
-    name: 'Starbucks',
-    valuation: '-0.2%',
-    delta: 'fall',
-  },
-  {
-    id: '5',
-    ticker: 'SBUX',
-    name: 'Starbucks',
-    valuation: '-0.2%',
-    delta: 'fall',
-  },
-  {
-    id: '6',
-    ticker: 'SBUX',
-    name: 'Starbucks',
-    valuation: '-0.2%',
-    delta: 'fall',
-  },
-];
+import { Card } from '../Card';
+import { favoritesSelector } from '../../store/modules/user';
 
 const PARENT_LEFT_PADDING = 24;
-const CHILD_WIDTH = 300;
+const CHILD_WIDTH = 360;
 const CHILD_PADDED_WIDTH = CHILD_WIDTH + 24;
 
 interface RecentlyBrowsedProps {
@@ -67,8 +23,21 @@ interface RecentlyBrowsedProps {
 }
 
 export function RecentlyBrowsed({ elementsToScroll }: RecentlyBrowsedProps) {
+  const dispatch = useAppDispatch();
+  const { companies: recentCompanies, symbols } = useAppSelector(
+    recentlyBrowsedSelector
+  );
+  const { favorites } = useAppSelector(favoritesSelector);
+  const { pending } = useAppSelector(selectStocks);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollByExtraElements, setScrollByExtraElements] = useState(0);
+
+  useEffect(() => {
+    if (!pending) {
+      containerRef?.current?.scrollTo(0, 0);
+    }
+  }, [pending]);
 
   useEffect(() => {
     const containerWidth = containerRef?.current?.clientWidth || 0;
@@ -117,13 +86,16 @@ export function RecentlyBrowsed({ elementsToScroll }: RecentlyBrowsedProps) {
       <div className={styles.tickerScrollContainer}>
         <div className={styles.tickerScrollContent} ref={containerRef}>
           <div className={styles.tickerScrollFlex}>
-            {data.map((company: Company, i: number) => (
+            {symbols.map((symbol, i: number) => (
               <Card
-                key={company.id}
-                company={company}
+                key={symbol}
+                company={{
+                  ...recentCompanies[symbol],
+                  isFavorite: !!favorites[symbol]?.symbol,
+                }}
                 star
                 extraStyles={i > 0 ? { marginLeft: 20 } : {}}
-                onClick={() => {}}
+                onClick={() => dispatch(getStockData(symbol))}
               />
             ))}
           </div>

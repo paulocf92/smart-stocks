@@ -1,5 +1,10 @@
+.appWrapper {
+  display: flex;
+}
+
 .mainContainer {
-  max-width: 65%;
+  flex: 1;
+  overflow: hidden;
 }
 
 .mainContent {
@@ -16,6 +21,8 @@
 .titleContainer {
   display: flex;
   align-items: center;
+
+  margin-bottom: 1.5rem;
 
   strong {
     margin-left: 8px;
