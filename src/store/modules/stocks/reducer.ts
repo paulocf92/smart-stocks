@@ -38,6 +38,7 @@ export const stocksReducer = createReducer(initialState, builder => {
     /* Stock data (company and historical) */
     .addCase(getStockData.pending, state => {
       state.pending = true;
+      state.error = false;
     })
     .addCase(getStockData.fulfilled, (state, { payload }) => {
       state.pending = false;
