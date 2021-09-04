@@ -1,38 +1,35 @@
 import Image from 'next/image';
+import { ButtonHTMLAttributes } from 'react';
+
 import { StockDataFormatted } from '../../interfaces/stocks';
 
-import styles from './styles.module.scss';
+import { Container, Company, Icon, Name, Valuation } from './styles';
 
-interface Company extends StockDataFormatted {
-  isFavorite: boolean;
-}
-
-interface CardProps {
-  company: Company;
+interface CardProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  company: StockDataFormatted;
+  isFavorite?: boolean;
   star?: boolean;
-  extraStyles?: object;
-  onClick(): void;
 }
 
 export function Card({
   company,
+  isFavorite = false,
   star = false,
-  extraStyles,
-  onClick,
+  ...rest
 }: CardProps) {
   return (
-    <button className={styles.card} style={extraStyles} onClick={onClick}>
-      <div className={styles.cardCompany}>
+    <Container showStar={star} {...rest}>
+      <Company>
         {star && (
           <Image
-            src={`/images/star${company.isFavorite ? '-filled' : ''}.svg`}
+            src={`/images/star${isFavorite ? '-filled' : ''}.svg`}
             width={24}
             height={24}
             layout='fixed'
             alt=''
           />
         )}
-        <div className={styles.companyIcon}>
+        <Icon>
           <Image
             src={`https://storage.googleapis.com/iex/api/logos/${company.symbol}.png`}
             width={36}
@@ -40,35 +37,19 @@ export function Card({
             layout='fixed'
             alt=''
           />
-          {
-            <svg height='36' width='36'>
-              <circle
-                cx='18'
-                cy='18'
-                r='17'
-                stroke='var(--white)'
-                fill='none'
-                strokeWidth='2'
-                strokeOpacity='0.5'
-              ></circle>
-            </svg>
-          }
-        </div>
 
-        <div className={styles.companyName}>
+          <svg height='36' width='36'>
+            <circle cx='18' cy='18' r='17'></circle>
+          </svg>
+        </Icon>
+
+        <Name>
           <strong>{company.symbol}</strong>
           <p>{company.companyName}</p>
-        </div>
-      </div>
-      <div className={styles.cardCompanyValuation}>
-        <span
-          style={{
-            color:
-              company.changePercent > 0 ? 'var(--success)' : 'var(--danger)',
-          }}
-        >
-          {company.changePercentStr}
-        </span>
+        </Name>
+      </Company>
+      <Valuation isIncrease={company.changePercent > 0}>
+        <span>{company.changePercentStr}</span>
         <Image
           src={`/images/price-${
             company.changePercent > 0 ? 'rise' : 'fall'
@@ -78,7 +59,7 @@ export function Card({
           layout='fixed'
           alt=''
         />
-      </div>
-    </button>
+      </Valuation>
+    </Container>
   );
 }

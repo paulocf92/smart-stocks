@@ -70,7 +70,7 @@ export function StocksGrowth() {
           <>
             <Company>
               <TooltipWrapper>
-                <button type='button' onClick={handleFavoriteToggle}>
+                <button onClick={handleFavoriteToggle}>
                   <Image
                     src={`/images/star${isFavorite ? '-filled' : ''}.svg`}
                     width={24}
