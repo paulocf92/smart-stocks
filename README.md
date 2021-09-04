@@ -17,14 +17,16 @@
 
 Search and track your favorite stocks!
 
+<p><img src=".github/app.gif" width="600" alt="Smart Stocks" title="Smart Stocks" /></p>
+
 # 🚀 About the project
 
 **Smart Stocks** allows searching, tracking and favoriting stocks listed under NASDAQ. It displays stock valuation change as of market close and its growth across the day.
 
 Main technologies used:
 
-- Next.js (React.js)
-- Redux Toolkit
+- ⭐ Next.js (React.js)
+- ⭐ Redux Toolkit
 - ⭐ Styled Components
 
 Additional libs:
