@@ -9,7 +9,7 @@ import { RecentlyBrowsed } from '../components/RecentlyBrowsed';
 
 import { FavoriteCompanies } from '../components/FavoriteCompanies';
 
-import styles from './home.module.scss';
+import { Wrapper, Container, Content, PageTitle } from './styles';
 
 export default function Home() {
   return (
@@ -18,11 +18,11 @@ export default function Home() {
         <title>Home | Smart Stocks</title>
       </Head>
 
-      <div className={styles.appWrapper}>
+      <Wrapper>
         <Header />
-        <main className={styles.mainContainer}>
-          <div className={styles.mainContent}>
-            <div className={styles.titleContainer}>
+        <Container>
+          <Content>
+            <PageTitle>
               <Image
                 src='/images/dashboard-icon.svg'
                 width={24}
@@ -31,18 +31,18 @@ export default function Home() {
                 alt='Dashboard'
               />
               <strong>Dashboard</strong>
-            </div>
+            </PageTitle>
 
             <SearchInput />
 
             <StocksGrowth />
 
             <RecentlyBrowsed />
-          </div>
-        </main>
+          </Content>
+        </Container>
 
         <FavoriteCompanies />
-      </div>
+      </Wrapper>
     </>
   );
 }
