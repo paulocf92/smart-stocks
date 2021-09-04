@@ -19,12 +19,21 @@ export function Card({
   return (
     <button className={styles.card} style={extraStyles} onClick={onClick}>
       <div className={styles.cardCompany}>
-        {star && <Image src='/images/star.svg' width={24} height={24} alt='' />}
+        {star && (
+          <Image
+            src='/images/star.svg'
+            width={24}
+            height={24}
+            layout='fixed'
+            alt=''
+          />
+        )}
         <div className={styles.companyIcon}>
           <Image
             src={`https://storage.googleapis.com/iex/api/logos/${company.symbol}.png`}
             width={36}
             height={36}
+            layout='fixed'
             alt=''
           />
           {
@@ -62,6 +71,7 @@ export function Card({
           }.svg`}
           width={16}
           height={16}
+          layout='fixed'
           alt=''
         />
       </div>

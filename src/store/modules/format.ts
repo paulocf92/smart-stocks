@@ -2,7 +2,7 @@ import { StockData, StockDataFormatted } from '../../interfaces/stocks';
 
 export const formatStockData = (data: StockData): StockDataFormatted => ({
   ...data,
-  companyName: data.companyName?.slice(0, data.companyName.indexOf(' -')),
+  companyName: data.companyName?.replace(/ \-.+$/, ''),
   latestPriceStr: new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',

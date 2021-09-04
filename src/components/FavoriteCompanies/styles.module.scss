@@ -1,10 +1,16 @@
 .favoriteContainer {
-  width: 100%;
-
   display: flex;
   flex-direction: column;
+  flex-basis: 400px;
 
   margin: 20px;
+
+  overflow: hidden;
+  height: 90vh;
+}
+
+.favoriteCompanies {
+  overflow: auto;
 }
 
 .userInfo {
