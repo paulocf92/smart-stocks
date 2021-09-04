@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
@@ -11,6 +11,7 @@ import {
 import styles from './styles.module.scss';
 
 import { Card } from '../Card';
+import { favoritesSelector } from '../../store/modules/user';
 
 const PARENT_LEFT_PADDING = 24;
 const CHILD_WIDTH = 300;
@@ -25,6 +26,7 @@ export function RecentlyBrowsed({ elementsToScroll }: RecentlyBrowsedProps) {
   const { companies: recentCompanies, symbols } = useAppSelector(
     recentlyBrowsedSelector
   );
+  const { favorites } = useAppSelector(favoritesSelector);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollByExtraElements, setScrollByExtraElements] = useState(0);
@@ -79,7 +81,10 @@ export function RecentlyBrowsed({ elementsToScroll }: RecentlyBrowsedProps) {
             {symbols.map((symbol, i: number) => (
               <Card
                 key={symbol}
-                company={recentCompanies[symbol]}
+                company={{
+                  ...recentCompanies[symbol],
+                  isFavorite: !!favorites[symbol]?.symbol,
+                }}
                 star
                 extraStyles={i > 0 ? { marginLeft: 20 } : {}}
                 onClick={() => dispatch(getStockData(symbol))}

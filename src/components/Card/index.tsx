@@ -3,8 +3,12 @@ import { StockDataFormatted } from '../../interfaces/stocks';
 
 import styles from './styles.module.scss';
 
+interface Company extends StockDataFormatted {
+  isFavorite: boolean;
+}
+
 interface CardProps {
-  company: StockDataFormatted;
+  company: Company;
   star?: boolean;
   extraStyles?: object;
   onClick(): void;
@@ -21,7 +25,7 @@ export function Card({
       <div className={styles.cardCompany}>
         {star && (
           <Image
-            src='/images/star.svg'
+            src={`/images/star${company.isFavorite ? '-filled' : ''}.svg`}
             width={24}
             height={24}
             layout='fixed'
