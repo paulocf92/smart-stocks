@@ -59,7 +59,7 @@ export const stocksReducer = createReducer(initialState, builder => {
           ),
         ];
       } else {
-        state.recentlyBrowsed.symbols.push(retrievedStockSymbol);
+        state.recentlyBrowsed.symbols.unshift(retrievedStockSymbol);
       }
 
       state.recentlyBrowsed.companies[retrievedStockSymbol] = payload.stockData;

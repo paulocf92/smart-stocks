@@ -6,6 +6,7 @@ import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import {
   getStockData,
   recentlyBrowsedSelector,
+  selectStocks,
 } from '../../store/modules/stocks';
 
 import styles from './styles.module.scss';
@@ -27,9 +28,16 @@ export function RecentlyBrowsed({ elementsToScroll }: RecentlyBrowsedProps) {
     recentlyBrowsedSelector
   );
   const { favorites } = useAppSelector(favoritesSelector);
+  const { pending } = useAppSelector(selectStocks);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollByExtraElements, setScrollByExtraElements] = useState(0);
+
+  useEffect(() => {
+    if (!pending) {
+      containerRef?.current?.scrollTo(0, 0);
+    }
+  }, [pending]);
 
   useEffect(() => {
     const containerWidth = containerRef?.current?.clientWidth || 0;
